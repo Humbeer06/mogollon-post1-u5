@@ -84,7 +84,12 @@ se está validando, como el horario de atención o la duración mínima y
 máxima, no hay ninguna razón para involucrar al Repository ni a la
 base de datos, y hacerlo de todas formas sería un viaje a la base de
 datos innecesario además de una regla más difícil de probar de forma
-aislada.
+aislada. Refinamiento posterior: esta validación lanza su propia
+`HorarioInvalidoException` (400) en vez de reutilizar
+`ReservaConflictException` (409, reservada exclusivamente para el
+solapamiento del Punto de decisión 1) — son violaciones de distinta
+naturaleza y la rúbrica de Funcionalidad exige distinguirlas por código
+de estado HTTP.
 
 ### Punto de decisión 3 — Cómo comparten Service el Controller MVC y el REST
 
@@ -132,12 +137,12 @@ una sola vez en el paquete `exception/`.
 ### Parte 1 — API REST: casos de prueba con curl
 
 Laboratorio creado (`201`), reserva válida (`201`), reserva solapada
-(`409`) y reserva fuera del horario de atención. Este último caso
-también responde `409` porque, por diseño (ver Punto de decisión 2),
-`validarHorarioYDuracion` lanza la misma `ReservaConflictException`
-que usa el solapamiento — el único caso real de `400` en esta API es
-una violación de Bean Validation (`@NotBlank`, `@Email`, etc.), incluido
-como quinto caso para dejar esa distinción documentada.
+(`409`) y reserva fuera del horario de atención (`400`).
+`HorarioInvalidoException` separa este último caso de
+`ReservaConflictException` (ver Punto de decisión 2): el solapamiento
+sigue siendo un conflicto de estado (`409`), mientras que un horario
+o duración inválidos son datos de entrada rechazados por una regla de
+dominio (`400`), tal como exige la rúbrica de Funcionalidad.
 
 ![Casos de prueba de la API REST](screenshots/04-api-rest-casos-prueba.png)
 

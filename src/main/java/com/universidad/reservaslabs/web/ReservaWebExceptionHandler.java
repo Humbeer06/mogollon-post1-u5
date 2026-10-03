@@ -1,5 +1,6 @@
 package com.universidad.reservaslabs.web;
 
+import com.universidad.reservaslabs.exception.HorarioInvalidoException;
 import com.universidad.reservaslabs.exception.RecursoNoEncontradoException;
 import com.universidad.reservaslabs.exception.ReservaConflictException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,6 +16,12 @@ public class ReservaWebExceptionHandler {
 
     @ExceptionHandler(ReservaConflictException.class)
     public String conflicto(ReservaConflictException ex, RedirectAttributes redirect) {
+        redirect.addFlashAttribute("error", ex.getMessage());
+        return "redirect:/reservas/nueva";
+    }
+
+    @ExceptionHandler(HorarioInvalidoException.class)
+    public String horarioInvalido(HorarioInvalidoException ex, RedirectAttributes redirect) {
         redirect.addFlashAttribute("error", ex.getMessage());
         return "redirect:/reservas/nueva";
     }

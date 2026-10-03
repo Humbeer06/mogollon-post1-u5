@@ -25,6 +25,11 @@ public class GlobalRestExceptionHandler {
         return ResponseEntity.status(409).body(Map.of("error", ex.getMessage()));
     }
 
+    @ExceptionHandler(HorarioInvalidoException.class)
+    public ResponseEntity<Map<String, String>> horarioInvalido(HorarioInvalidoException ex) {
+        return ResponseEntity.status(400).body(Map.of("error", ex.getMessage()));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> validationError(MethodArgumentNotValidException ex) {
         List<String> errores = ex.getBindingResult().getFieldErrors().stream()
