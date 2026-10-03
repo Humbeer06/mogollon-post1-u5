@@ -127,6 +127,35 @@ el mismo vocabulario de excepciones de dominio
 (`ReservaConflictException`, `RecursoNoEncontradoException`) definido
 una sola vez en el paquete `exception/`.
 
+## Evidencia de ejecución
+
+### Parte 1 — API REST: casos de prueba con curl
+
+Laboratorio creado (`201`), reserva válida (`201`), reserva solapada
+(`409`) y reserva fuera del horario de atención. Este último caso
+también responde `409` porque, por diseño (ver Punto de decisión 2),
+`validarHorarioYDuracion` lanza la misma `ReservaConflictException`
+que usa el solapamiento — el único caso real de `400` en esta API es
+una violación de Bean Validation (`@NotBlank`, `@Email`, etc.), incluido
+como quinto caso para dejar esa distinción documentada.
+
+![Casos de prueba de la API REST](screenshots/04-api-rest-casos-prueba.png)
+
+### Parte 2 — Vista Thymeleaf
+
+Listado de reservas en `/reservas`:
+
+![Listado de reservas](screenshots/05-vista-lista-reservas.png)
+
+Formulario de nueva reserva en `/reservas/nueva`:
+
+![Formulario de nueva reserva](screenshots/06-vista-nueva-reserva.png)
+
+Mismo formulario tras un intento de reserva solapada, mostrando el
+mensaje de error vía *flash attribute* (`ReservaWebExceptionHandler`):
+
+![Error de solapamiento en el formulario](screenshots/07-vista-nueva-reserva-error-solapamiento.png)
+
 ## Herramientas utilizadas
 
 - Java 17, Spring Boot 3.2, Spring Data JPA, H2, Thymeleaf
