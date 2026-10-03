@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reservas de Laboratorios</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; color: #222; }
+        table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
+        th, td { border: 1px solid #ccc; padding: 0.5rem 0.75rem; text-align: left; }
+        th { background: #f2f2f2; }
+        .mensaje { color: #1a7a1a; }
+        .error { color: #b00020; }
+        a.nueva { display: inline-block; margin-top: 0.5rem; }
+    </style>
+</head>
+<body>
+    <h1>Reservas de Laboratorios</h1>
+
+    <p class="mensaje" th:if="${mensaje}" th:text="${mensaje}"></p>
+    <p class="error" th:if="${error}" th:text="${error}"></p>
+
+    <a class="nueva" href="/reservas/nueva">+ Nueva reserva</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Laboratorio</th>
+                <th>Solicitante</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th>Estado</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="r : ${reservas}">
+                <td th:text="${r.laboratorio.nombre}"></td>
+                <td th:text="${r.nombreSolicitante}"></td>
+                <td th:text="${r.inicio}"></td>
+                <td th:text="${r.fin}"></td>
+                <td th:text="${r.estado}"></td>
+                <td>
+                    <form th:action="@{/reservas/{id}/cancelar(id=${r.id})}" method="post">
+                        <button type="submit" th:disabled="${r.estado.name() == 'CANCELADA'}">Cancelar</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

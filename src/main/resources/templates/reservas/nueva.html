@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nueva Reserva</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; color: #222; }
+        label { display: block; margin-top: 0.75rem; }
+        input, select { padding: 0.35rem; min-width: 260px; }
+        button { margin-top: 1.25rem; padding: 0.5rem 1rem; }
+        .error { color: #b00020; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Nueva Reserva</h1>
+
+    <p class="error" th:if="${error}" th:text="${error}"></p>
+
+    <form th:action="@{/reservas}" th:object="${reserva}" method="post">
+        <label>Laboratorio
+            <select name="laboratorio.id">
+                <option th:each="lab : ${laboratorios}" th:value="${lab.id}" th:text="${lab.nombre}"></option>
+            </select>
+        </label>
+        <label>Nombre solicitante
+            <input type="text" th:field="*{nombreSolicitante}"/>
+        </label>
+        <label>Correo
+            <input type="email" th:field="*{correoSolicitante}"/>
+        </label>
+        <label>Inicio
+            <input type="datetime-local" th:field="*{inicio}"/>
+        </label>
+        <label>Fin
+            <input type="datetime-local" th:field="*{fin}"/>
+        </label>
+        <label>Motivo
+            <input type="text" th:field="*{motivo}"/>
+        </label>
+        <button type="submit">Reservar</button>
+    </form>
+</body>
+</html>
